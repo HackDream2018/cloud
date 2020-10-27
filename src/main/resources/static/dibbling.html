@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>视频点播</title>
+    <script src="jquery-3.5.1.min.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+</head>
+<style>
+
+    button {
+        display: inline-block;
+        padding: .3em .5em;
+        background-image: linear-gradient(#8eb349, #5f7c22);
+        border: 1px solid rgba(0,0,0,.2);
+        border-radius: .3em;
+        box-shadow: 0 1px white inset;
+        text-align: center;
+        text-shadow: 0 1px 1px black;
+        color:white;
+        font-weight: bold;
+        height: 60px;
+        width: 300px;
+    }
+    button:active{
+        box-shadow: .05em .1em .2em rgba(0,0,0,.6) inset;
+        border-color: rgba(0,0,0,.3);
+        background: #bbb;
+    }
+
+</style>
+
+
+<body onload="getMovieName()">
+    <video width="600" height="400" controls preload="metadata"></video>
+
+    <div align="center" id="checkVideoBtn">
+        <button>切换点播视频</button>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+    var $checkVideoBtn = $('#checkVideoBtn');
+
+    $(function () {
+        $("video").append("<source src=\"http://"+window.location.host+"/admin?continueGetResource=newRequest\" type=\"video/mp4\">")
+
+    });
+
+    $checkVideoBtn.click(function () {
+        location.reload();
+    });
+
+    function getMovieName() {
+        $.get("http://"+window.location.host+"/admin/getMovieName", function (map) {
+            $("video").remove();
+            var html = "";
+            html += "<video width=\"450\" height=\"400\" controls preload=\"metadata\">";
+            html += "<source src=\"http://"+window.location.host+"/admin?continueGetResource="+map.movieIndex+"\" type=\"video/mp4\">";
+            html += "</video>";
+            $checkVideoBtn.before(html);
+            $("video").before("<h1 align='center'>"+map.movieName+"</h1>")
+        })
+    }
+</script>
+
+
